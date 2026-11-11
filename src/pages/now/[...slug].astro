@@ -1,0 +1,25 @@
+---
+import type { GetStaticPaths } from 'astro';
+import { render } from 'astro:content';
+import Base from '~/layouts/Base.astro';
+import PageTitle from '~/components/PageTitle.astro';
+import Prose from '~/components/Prose.astro';
+import { getNow } from '~/lib/content';
+import { isoDay } from '~/lib/format';
+
+/** Archived snapshots only — the newest lives at /now/ */
+export const getStaticPaths = (async () => {
+  const [, ...older] = await getNow();
+  return older.map((snap) => ({ params: { slug: snap.id }, props: { snap } }));
+}) satisfies GetStaticPaths;
+
+const { snap } = Astro.props;
+const { Content } = await render(snap);
+---
+
+<Base title={`now, as of ${isoDay(snap.data.date)}`} description={snap.data.summary}>
+  <PageTitle title={`now, as of ${isoDay(snap.data.date)}`} icon="clock">
+    <p class="mt-3 text-sm text-ink-soft">An old snapshot, kept for the record. <a href="/now/">See the current one &rarr;</a></p>
+  </PageTitle>
+  <Prose><Content /></Prose>
+</Base>

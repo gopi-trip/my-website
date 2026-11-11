@@ -1,0 +1,46 @@
+---
+import type { GetStaticPaths } from 'astro';
+import { render } from 'astro:content';
+import Article from '~/layouts/Article.astro';
+import Stage from '~/components/Stage.astro';
+import Section from '~/components/Section.astro';
+import { backlinksTo, getWiki, wikiCategory } from '~/lib/content';
+import { isoDay } from '~/lib/format';
+
+export const getStaticPaths = (async () => {
+  const notes = await getWiki();
+  return notes.map((note) => ({ params: { slug: note.id }, props: { note } }));
+}) satisfies GetStaticPaths;
+
+const { note } = Astro.props;
+const { Content, headings } = await render(note);
+const backlinks = await backlinksTo(note);
+const d = note.data;
+---
+
+<Article title={d.title} description={d.description} published={d.created} tags={d.tags} headings={headings} back={{ href: '/wiki/', label: 'wiki' }}>
+  <Fragment slot="meta">
+    <Stage stage={d.stage} />
+    <span>{wikiCategory(note)}/</span>
+    <span>planted <time datetime={d.created.toISOString()}>{isoDay(d.created)}</time></span>
+    {d.updated && <span>tended <time datetime={d.updated.toISOString()}>{isoDay(d.updated)}</time></span>}
+  </Fragment>
+  <Content />
+  <Fragment slot="after">
+    <Section title="linked from" id="backlinks" class="no-print">
+      {
+        backlinks.length > 0 ? (
+          <ul class="text-sm space-y-0.5">
+            {backlinks.map((b) => (
+              <li>
+                <span class="text-ink-faint text-xs">{b.collection}/</span> <a href={b.href}>{b.title}</a>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p class="text-sm text-ink-faint">Nothing links here yet. A lonely note.</p>
+        )
+      }
+    </Section>
+  </Fragment>
+</Article>

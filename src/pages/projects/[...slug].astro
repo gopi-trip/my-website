@@ -1,0 +1,28 @@
+---
+import type { GetStaticPaths } from 'astro';
+import { render } from 'astro:content';
+import Article from '~/layouts/Article.astro';
+import LinkList from '~/components/LinkList.astro';
+import Status from '~/components/Status.astro';
+import { getProjects } from '~/lib/content';
+import { isoDay } from '~/lib/format';
+
+export const getStaticPaths = (async () => {
+  const projects = await getProjects();
+  return projects.map((project) => ({ params: { slug: project.id }, props: { project } }));
+}) satisfies GetStaticPaths;
+
+const { project } = Astro.props;
+const { Content, headings } = await render(project);
+const d = project.data;
+---
+
+<Article title={d.title} description={d.description} published={d.date} tags={d.tags} headings={headings} back={{ href: '/projects/', label: 'projects' }}>
+  <Fragment slot="meta">
+    <Status status={d.status} />
+    <span>started <time datetime={d.date.toISOString()}>{isoDay(d.date)}</time></span>
+    {d.stack.length > 0 && <span>{d.stack.join(' · ')}</span>}
+    <LinkList links={d.links} />
+  </Fragment>
+  <Content />
+</Article>

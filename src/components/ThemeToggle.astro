@@ -1,0 +1,27 @@
+---
+import Pixel from './Pixel.astro';
+---
+
+<button
+  type="button"
+  id="theme-toggle"
+  class="inline-flex items-center gap-1.5 cursor-pointer text-ink-soft hover:text-accent text-xs no-print"
+  aria-label="Toggle dark mode"
+  title="lights"
+>
+  <span class="hidden dark:inline-flex"><Pixel name="sun" scale={2} /></span>
+  <span class="inline-flex dark:hidden"><Pixel name="moon" scale={2} /></span>
+  <span class="pixel hidden sm:inline">
+    <span class="dark:hidden">night</span><span class="hidden dark:inline">day</span>
+  </span>
+</button>
+
+<script>
+  const btn = document.getElementById('theme-toggle');
+  btn?.addEventListener('click', () => {
+    const root = document.documentElement;
+    const next = root.dataset.theme === 'dark' ? 'light' : 'dark';
+    root.dataset.theme = next;
+    try { localStorage.setItem('theme', next); } catch {}
+  });
+</script>

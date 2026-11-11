@@ -1,0 +1,35 @@
+---
+import { isoDay } from '~/lib/format';
+
+interface Props {
+  href: string;
+  title: string;
+  date?: Date;
+  description?: string;
+  /** small text right after the title, e.g. "wiki" or "3 min" */
+  aside?: string;
+  /** value(s) for <Filter>, space separated */
+  filter?: string;
+}
+const { href, title, date, description, aside, filter } = Astro.props;
+---
+
+<li class="group py-1" data-filter-item={filter}>
+  <div class="flex items-baseline">
+    <a href={href} class="min-w-0">{title}</a>
+    {aside && <span class="hidden sm:inline ml-2 text-xs text-ink-faint whitespace-nowrap">{aside}</span>}
+    <span class="leader hidden sm:block" aria-hidden="true"></span>
+    {date && <time datetime={date.toISOString()} class="hidden sm:inline text-xs text-ink-soft tabular-nums whitespace-nowrap">{isoDay(date)}</time>}
+  </div>
+  {
+    (date || aside) && (
+      <p class="sm:hidden text-xs text-ink-faint">
+        {date && <time datetime={date.toISOString()} class="tabular-nums">{isoDay(date)}</time>}
+        {date && aside && ' · '}
+        {aside}
+      </p>
+    )
+  }
+  {description && <p class="text-sm text-ink-soft leading-snug mt-0.5">{description}</p>}
+  <slot />
+</li>

@@ -1,0 +1,63 @@
+---
+title: Building a website to live in
+description: Notes on the decisions behind this site — plain text, pixel icons, and why there's no JavaScript framework.
+date: 2026-11-11
+kind: technical
+tags: [web, astro, meta]
+---
+
+import Pixel from '~/components/Pixel.astro';
+
+Most personal sites I've built were really résumés with a dark mode. This one
+is meant to be somewhere I *live*: a place to put notes, half-ideas and long
+posts without first asking whether they're impressive enough.
+
+## Constraints I set myself
+
+1. **Content is plain files.** Every post, note and book is Markdown or YAML in
+   `src/content/`. If this site's code disappeared tomorrow, the writing would
+   survive in a folder.
+2. **No client-side framework.** Pages are static HTML. The only scripts are a
+   theme toggle, the wiki filter and the list filters — each a few dozen lines.
+3. **One font family, one accent.** JetBrains Mono for reading, Silkscreen for
+   the pixel headings, and a single dusty brick red for things that need your
+   attention.
+
+## Pixel icons as text
+
+The icons aren't image files. Each one is a little grid of characters:
+
+```txt
+..####..
+...##...
+...##...
+..#..#..
+.#....#.
+#.++++.#
+#++++++#
+.######.
+```
+
+That's the flask on the [research](/research/) page: <Pixel name="flask" scale={3} />.
+`#` is ink, `+` is the highlighter colour, `.` is nothing. A component reads
+the grid, merges each row into horizontal runs and emits an SVG with
+`shape-rendering="crispEdges"`. That means the icons recolour with the
+surrounding text, stay sharp at any size, and are trivially easy to edit in a
+text editor. The favicon is drawn from the same grid as the header.
+
+## A wiki with backlinks
+
+Notes in the [wiki](/wiki/) can link to each other with double-bracket
+syntax, like [[attention]] or [[kl-divergence|KL divergence]]. A small remark
+plugin turns those into ordinary links at build time, and each note's page
+scans the rest of the site to list what links *back* to it. It's the cheapest
+version of a feature I've wanted on every notes app I've used.
+
+Each note also carries a growth stage — seedling, budding or evergreen — so
+it's honest about how finished it is. See [[how-this-wiki-works]].
+
+## What I left out
+
+Comments, analytics, a newsletter, infinite scroll, and a hero section. If you
+want to talk about something here, write to me. If you want to follow along,
+there's [an RSS feed](/rss.xml).

@@ -1,0 +1,18 @@
+---
+/** Renders a project/research `links` object as "[repo] [demo] [arxiv]" */
+interface Props { links: Partial<Record<string, string>>; class?: string }
+const { links, class: cls = '' } = Astro.props;
+const items = Object.entries(links).filter(([, v]) => !!v) as [string, string][];
+---
+
+{
+  items.length > 0 && (
+    <ul class:list={['flex flex-wrap gap-x-3 text-xs', cls]}>
+      {items.map(([k, v]) => (
+        <li>
+          <span class="text-ink-faint">[</span><a href={v} rel={v.startsWith('http') ? 'noopener' : undefined}>{k}</a><span class="text-ink-faint">]</span>
+        </li>
+      ))}
+    </ul>
+  )
+}

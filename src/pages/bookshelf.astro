@@ -1,0 +1,69 @@
+---
+import { getCollection, type CollectionEntry } from 'astro:content';
+import Base from '~/layouts/Base.astro';
+import PageTitle from '~/components/PageTitle.astro';
+import Section from '~/components/Section.astro';
+import Filter from '~/components/Filter.astro';
+import Pixel from '~/components/Pixel.astro';
+
+type Item = CollectionEntry<'shelf'>;
+const shelf = await getCollection('shelf');
+const finished = (i: Item) => i.data.finished?.valueOf() ?? 0;
+
+const shelves = [
+  { status: 'reading', title: 'on the desk', blurb: 'currently open' },
+  { status: 'queued', title: 'the pile', blurb: 'next, probably' },
+  { status: 'read', title: 'read', blurb: 'finished, newest first' },
+  { status: 'abandoned', title: 'put down', blurb: 'not every book is for every time' },
+] as const;
+const typeCount = (t: string) => shelf.filter((i) => i.data.type === t).length;
+---
+
+<Base title="bookshelf" description="Books and papers I've read, am reading, or plan to read.">
+  <PageTitle title="bookshelf" icon="book" intro="Books and papers, read and unread. Ratings are out of five and mostly reflect how often I think about a thing afterwards." />
+
+  <div data-filter-scope>
+    <Filter options={[{ value: 'book', label: 'books', count: typeCount('book') }, { value: 'paper', label: 'papers', count: typeCount('paper') }]} label="show" />
+    {
+      shelves.map((s) => {
+        const items = shelf.filter((i) => i.data.status === s.status).sort((a, b) => finished(b) - finished(a) || a.data.title.localeCompare(b.data.title));
+        return (
+          items.length > 0 && (
+            <div data-filter-group>
+              <Section title={s.title} id={s.status}>
+                <p class="text-xs text-ink-faint -mt-1 mb-3">{s.blurb}</p>
+                <ul class="space-y-3">
+                  {items.map((b) => (
+                    <li data-filter-item={b.data.type} class="flex gap-3">
+                      <span aria-hidden="true" class="mt-1.5 shrink-0 text-ink-faint">
+                        <Pixel name={b.data.type === 'paper' ? 'quill' : 'book'} scale={1.5} />
+                      </span>
+                      <div class="min-w-0">
+                        <p class="leading-snug">
+                          {b.data.link ? <a href={b.data.link} rel="noopener"><cite class="not-italic font-bold">{b.data.title}</cite></a> : <cite class="not-italic font-bold">{b.data.title}</cite>}
+                          <span class="text-sm text-ink-soft"> — {b.data.author}{b.data.year && `, ${b.data.year}`}</span>
+                        </p>
+                        <p class="text-xs text-ink-faint flex flex-wrap items-center gap-x-3">
+                          {b.data.rating && (
+                            <span class="inline-flex gap-0.5 text-accent" role="img" aria-label={`${b.data.rating} out of 5`}>
+                              {Array.from({ length: 5 }, (_, k) => (
+                                <span class:list={[k >= b.data.rating! && 'opacity-25']}><Pixel name="star" scale={1.2} /></span>
+                              ))}
+                            </span>
+                          )}
+                          {b.data.finished && <span>finished {b.data.finished.toISOString().slice(0, 7)}</span>}
+                          {b.data.tags.length > 0 && <span>{b.data.tags.map((t) => `#${t}`).join(' ')}</span>}
+                        </p>
+                        {b.data.note && <p class="text-sm text-ink-soft mt-0.5">{b.data.note}</p>}
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              </Section>
+            </div>
+          )
+        );
+      })
+    }
+  </div>
+</Base>

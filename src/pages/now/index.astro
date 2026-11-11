@@ -1,0 +1,45 @@
+---
+import { render } from 'astro:content';
+import Base from '~/layouts/Base.astro';
+import PageTitle from '~/components/PageTitle.astro';
+import Prose from '~/components/Prose.astro';
+import Section from '~/components/Section.astro';
+import { getNow } from '~/lib/content';
+import { isoDay } from '~/lib/format';
+
+const [latest, ...older] = await getNow();
+if (!latest) throw new Error('add at least one snapshot in src/content/now/');
+const { Content } = await render(latest);
+const days = Math.floor((Date.now() - latest.data.date.valueOf()) / 864e5);
+---
+
+<Base title="now" description="What I'm currently learning and working on.">
+  <PageTitle title="now" icon="clock">
+    <p class="mt-3 text-sm text-ink-soft">
+      updated <time datetime={latest.data.date.toISOString()}>{isoDay(latest.data.date)}</time>
+      {days > 0 && <span class="text-ink-faint">({days} {days === 1 ? 'day' : 'days'} ago{days > 90 && ', which means this is probably stale'})</span>}
+      {latest.data.location && <span> · from {latest.data.location}</span>}
+    </p>
+  </PageTitle>
+
+  <Prose><Content /></Prose>
+
+  <p class="mt-10 text-xs text-ink-faint">
+    This is a <a href="https://nownownow.com/about" rel="noopener">/now page</a>: what I'd tell a friend I haven't seen in a while.
+  </p>
+
+  {
+    older.length > 0 && (
+      <Section title="previously" id="archive">
+        <ul class="text-sm space-y-0.5">
+          {older.map((n) => (
+            <li>
+              <a href={`/now/${n.id}/`} class="tabular-nums">{isoDay(n.data.date)}</a>
+              <span class="text-ink-soft"> — {n.data.summary}</span>
+            </li>
+          ))}
+        </ul>
+      </Section>
+    )
+  }
+</Base>

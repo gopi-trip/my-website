@@ -1,0 +1,27 @@
+---
+import type { GetStaticPaths } from 'astro';
+import Base from '~/layouts/Base.astro';
+import MicroPost from '~/components/MicroPost.astro';
+import { getMicro } from '~/lib/content';
+import { isoDay } from '~/lib/format';
+
+export const getStaticPaths = (async () => {
+  const posts = await getMicro();
+  return posts.map((post, i) => ({ params: { slug: post.id }, props: { post, newer: posts[i - 1], older: posts[i + 1] } }));
+}) satisfies GetStaticPaths;
+
+const { post, newer, older } = Astro.props;
+const excerpt = (post.body ?? '').replace(/\s+/g, ' ').trim().slice(0, 140);
+---
+
+<Base title={`micro · ${isoDay(post.data.date)}`} description={excerpt} type="article" published={post.data.date}>
+  <p class="mt-10 text-xs text-ink-soft"><a href="/micro/" class="no-underline hover:underline">&larr; micro</a></p>
+  <h1 class="sr-only">A thought from {isoDay(post.data.date)}</h1>
+  <ol class="mt-6 text-lg">
+    <MicroPost entry={post} permalink={false} />
+  </ol>
+  <nav aria-label="more thoughts" class="mt-12 flex justify-between text-xs text-ink-soft">
+    {older ? <a href={`/micro/${older.id}/`}>&larr; older thought</a> : <span />}
+    {newer && <a href={`/micro/${newer.id}/`}>newer thought &rarr;</a>}
+  </nav>
+</Base>

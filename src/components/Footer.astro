@@ -1,0 +1,27 @@
+---
+import { elsewhere, site } from '~/site.config';
+import { isoDay } from '~/lib/format';
+import Pixel from './Pixel.astro';
+
+const built = new Date();
+---
+
+<footer role="contentinfo" class="mt-20 pb-10 text-xs text-ink-soft">
+  <div class="dither mb-4" aria-hidden="true"></div>
+  <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
+    <div class="space-y-1">
+      <p>
+        last tended <time datetime={built.toISOString()}>{isoDay(built)}</time>{' '}
+        <span class="text-ink-faint">· open since {site.since}</span>
+      </p>
+      <p>
+        made by hand with <Pixel name="heart" scale={1.5} class="text-accent mx-0.5" label="love" /> and plain text. no trackers, no cookies.
+      </p>
+    </div>
+    <ul class="flex flex-wrap gap-x-3 gap-y-1">
+      {elsewhere.map((l) => <li><a href={l.href} rel={l.href.startsWith('http') ? 'me noopener' : undefined}>{l.label}</a></li>)}
+      <li><a href="/tags/">tags</a></li>
+      <li><a href="/sitemap-index.xml">sitemap</a></li>
+    </ul>
+  </div>
+</footer>

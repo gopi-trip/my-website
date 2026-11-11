@@ -1,0 +1,20 @@
+---
+interface Props {
+  title: string;
+  /** optional "see all" link */
+  more?: { href: string; label?: string };
+  class?: string;
+  id?: string;
+}
+const { title, more, class: cls = '', id = title.replace(/\s+/g, '-') } = Astro.props;
+---
+
+<section class:list={['mt-12', cls]} aria-labelledby={`sec-${id}`}>
+  <div class="flex items-baseline justify-between gap-4 mb-3">
+    <h2 id={`sec-${id}`} class="label">
+      <span aria-hidden="true" class="text-ink-faint">[ </span>{title}<span aria-hidden="true" class="text-ink-faint"> ]</span>
+    </h2>
+    {more && <a href={more.href} class="text-xs text-ink-soft">{more.label ?? 'all'} &rarr;</a>}
+  </div>
+  <slot />
+</section>

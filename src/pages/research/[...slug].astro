@@ -1,0 +1,30 @@
+---
+import type { GetStaticPaths } from 'astro';
+import { render } from 'astro:content';
+import Article from '~/layouts/Article.astro';
+import LinkList from '~/components/LinkList.astro';
+import Status from '~/components/Status.astro';
+import { getResearch } from '~/lib/content';
+import { isoDay } from '~/lib/format';
+
+export const getStaticPaths = (async () => {
+  const items = await getResearch();
+  return items.map((entry) => ({ params: { slug: entry.id }, props: { entry } }));
+}) satisfies GetStaticPaths;
+
+const { entry } = Astro.props;
+const { Content, headings } = await render(entry);
+const d = entry.data;
+---
+
+<Article title={d.title} description={d.description} published={d.date} tags={d.tags} headings={headings} back={{ href: '/research/', label: 'research' }}>
+  <Fragment slot="meta">
+    <span>{d.kind}</span>
+    <Status status={d.status} />
+    <time datetime={d.date.toISOString()}>{isoDay(d.date)}</time>
+    {d.venue && <span class="italic">{d.venue}</span>}
+    {d.authors.length > 0 && <span>{d.authors.join(', ')}</span>}
+    <LinkList links={d.links} />
+  </Fragment>
+  <Content />
+</Article>

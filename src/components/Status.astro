@@ -1,0 +1,10 @@
+---
+interface Props { status: string }
+const { status } = Astro.props;
+const lit = ['active', 'ongoing', 'reading'].includes(status);
+---
+
+<span class="inline-flex items-center gap-1 text-xs text-ink-soft whitespace-nowrap">
+  <span aria-hidden="true" class:list={['inline-block h-[6px] w-[6px]', lit ? 'bg-accent' : 'border border-ink-faint']}></span>
+  {status}
+</span>

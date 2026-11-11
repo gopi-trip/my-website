@@ -1,0 +1,27 @@
+---
+import Base from '~/layouts/Base.astro';
+import PageTitle from '~/components/PageTitle.astro';
+import MicroPost from '~/components/MicroPost.astro';
+import { getMicro } from '~/lib/content';
+import { monthYear } from '~/lib/format';
+
+const posts = await getMicro();
+const months = Map.groupBy(posts, (p) => monthYear(p.data.date));
+---
+
+<Base title="micro" description="Short thoughts and observations.">
+  <PageTitle title="micro" icon="bubble" intro="Short thoughts, half-thoughts, and things I noticed. Too small for a post, too stubborn to forget.">
+    <p class="mt-2 text-xs"><a href="/rss.xml">subscribe via rss</a></p>
+  </PageTitle>
+
+  {
+    [...months].map(([month, list]) => (
+      <section class="mb-10" aria-label={month}>
+        <h2 class="pixel text-sm text-ink-faint mb-4">{month}</h2>
+        <ol class="space-y-6">
+          {list.map((m) => <MicroPost entry={m} />)}
+        </ol>
+      </section>
+    ))
+  }
+</Base>

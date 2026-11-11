@@ -1,0 +1,15 @@
+---
+import Pixel from './Pixel.astro';
+import type { IconName } from '~/lib/icons';
+interface Props { title: string; icon?: IconName; intro?: string }
+const { title, icon, intro } = Astro.props;
+---
+
+<div class="mt-10 mb-8">
+  <h1 class="pixel text-2xl sm:text-3xl flex items-center gap-3">
+    {icon && <Pixel name={icon} scale={3} />}
+    {title}
+  </h1>
+  {intro && <p class="mt-3 text-ink-soft max-w-[60ch]">{intro}</p>}
+  <slot />
+</div>

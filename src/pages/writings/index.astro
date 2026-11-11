@@ -1,0 +1,33 @@
+---
+import Base from '~/layouts/Base.astro';
+import PageTitle from '~/components/PageTitle.astro';
+import EntryRow from '~/components/EntryRow.astro';
+import Filter from '~/components/Filter.astro';
+import { getWritings } from '~/lib/content';
+import { readingTime } from '~/lib/format';
+
+const posts = await getWritings();
+const years = Map.groupBy(posts, (p) => p.data.date.getUTCFullYear());
+const count = (k: string) => posts.filter((p) => p.data.kind === k).length;
+---
+
+<Base title="writings" description="Long-form technical and personal writing.">
+  <PageTitle title="writings" icon="quill" intro="Longer pieces. Some technical, some personal, most of them revised more than once." />
+
+  <div data-filter-scope>
+    <Filter options={[{ value: 'technical', label: 'technical', count: count('technical') }, { value: 'personal', label: 'personal', count: count('personal') }]} label="kind" />
+    {
+      [...years].map(([year, list]) => (
+        <section data-filter-group class="mb-8" aria-label={String(year)}>
+          <h2 class="pixel text-sm text-ink-faint mb-2">{year}</h2>
+          <ul>
+            {list.map((p) => (
+              <EntryRow filter={p.data.kind} href={`/writings/${p.id}/`} title={p.data.title} date={p.data.date} description={p.data.description} aside={`${readingTime(p.body)} min${p.data.draft ? ' · draft' : ''}`} />
+            ))}
+          </ul>
+        </section>
+      ))
+    }
+  </div>
+  {posts.length === 0 && <p class="text-ink-soft">Nothing here yet. Soon.</p>}
+</Base>

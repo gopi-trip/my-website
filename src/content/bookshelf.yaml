@@ -1,0 +1,63 @@
+# The bookshelf. One entry per book or paper.
+# status: reading | read | queued | abandoned
+# optional: year, type (book|paper), finished (YYYY-MM-DD), rating (1-5), note, link, tags
+- id: deep-learning
+  title: Deep Learning
+  author: Ian Goodfellow, Yoshua Bengio & Aaron Courville
+  year: 2016
+  status: reading
+  link: https://www.deeplearningbook.org/
+  note: One chapter a week. The linear algebra chapter is better than most textbooks.
+  tags: [ml]
+
+- id: attention-is-all-you-need
+  title: Attention Is All You Need
+  author: Vaswani et al.
+  year: 2017
+  type: paper
+  status: read
+  finished: 2026-07-01
+  rating: 5
+  link: https://arxiv.org/abs/1706.03762
+  note: Reread with a pen. My notes are in the wiki under attention.
+  tags: [ml, transformers]
+
+- id: sicp
+  title: Structure and Interpretation of Computer Programs
+  author: Harold Abelson & Gerald Jay Sussman
+  year: 1985
+  status: read
+  finished: 2026-03-15
+  rating: 5
+  tags: [programming]
+
+- id: pragmatic-programmer
+  title: The Pragmatic Programmer
+  author: David Thomas & Andrew Hunt
+  year: 1999
+  status: read
+  finished: 2025-12-20
+  rating: 3
+  tags: [programming]
+
+- id: scaling-laws
+  title: Scaling Laws for Neural Language Models
+  author: Kaplan et al.
+  year: 2020
+  type: paper
+  status: queued
+  link: https://arxiv.org/abs/2001.08361
+  tags: [ml]
+
+- id: godel-escher-bach
+  title: Gödel, Escher, Bach
+  author: Douglas Hofstadter
+  year: 1979
+  status: queued
+
+- id: ulysses
+  title: Ulysses
+  author: James Joyce
+  year: 1922
+  status: abandoned
+  note: Made it to chapter four. Will try again in a different decade.

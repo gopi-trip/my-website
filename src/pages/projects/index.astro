@@ -1,0 +1,42 @@
+---
+import Base from '~/layouts/Base.astro';
+import PageTitle from '~/components/PageTitle.astro';
+import Filter from '~/components/Filter.astro';
+import LinkList from '~/components/LinkList.astro';
+import Status from '~/components/Status.astro';
+import Pixel from '~/components/Pixel.astro';
+import { getProjects } from '~/lib/content';
+
+const projects = await getProjects();
+const statuses = ['active', 'paused', 'done', 'archived'] as const;
+const options = statuses
+  .map((s) => ({ value: s, label: s, count: projects.filter((p) => p.data.status === s).length }))
+  .filter((o) => o.count > 0);
+---
+
+<Base title="projects" description="Software, machine learning and research projects.">
+  <PageTitle title="projects" icon="floppy" intro="Things I've built or am building: software, ML experiments that grew legs, and research code. Starred ones are the ones I'd show you first." />
+
+  <div data-filter-scope>
+    <Filter options={options} label="status" />
+    <ul class="space-y-6">
+      {
+        projects.map((p) => (
+          <li data-filter-item={p.data.status} class="border-l-2 border-rule pl-4 hover:border-accent">
+            <div class="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+              <a href={`/projects/${p.id}/`} class="font-bold">{p.data.title}</a>
+              {p.data.featured && <Pixel name="star" scale={1.5} class="text-accent" label="featured" />}
+              <Status status={p.data.status} />
+              <span class="text-xs text-ink-faint">since {p.data.date.getUTCFullYear()}</span>
+            </div>
+            <p class="text-sm text-ink-soft mt-1">{p.data.description}</p>
+            <div class="mt-1.5 flex flex-wrap items-center gap-x-4 gap-y-1">
+              {p.data.stack.length > 0 && <span class="text-xs text-ink-faint">{p.data.stack.join(' · ')}</span>}
+              <LinkList links={p.data.links} />
+            </div>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</Base>

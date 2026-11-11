@@ -1,0 +1,15 @@
+---
+import { tagHref } from '~/lib/content';
+interface Props { tags: string[]; class?: string }
+const { tags, class: cls = '' } = Astro.props;
+---
+
+{
+  tags.length > 0 && (
+    <ul class:list={['flex flex-wrap gap-1.5', cls]} aria-label="tags">
+      {tags.map((t) => (
+        <li><a class="chip" href={tagHref(t)}>#{t.toLowerCase()}</a></li>
+      ))}
+    </ul>
+  )
+}

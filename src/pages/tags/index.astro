@@ -1,0 +1,22 @@
+---
+import Base from '~/layouts/Base.astro';
+import PageTitle from '~/components/PageTitle.astro';
+import { getTagIndex, tagHref } from '~/lib/content';
+
+const index = await getTagIndex();
+const max = Math.max(1, ...[...index.values()].map((l) => l.length));
+---
+
+<Base title="tags" description="Everything on the site, by topic.">
+  <PageTitle title="tags" icon="tag" intro="Every topic across writings, projects, research and the wiki." />
+  <ul class="flex flex-wrap gap-x-4 gap-y-2">
+    {
+      [...index].map(([tag, items]) => (
+        <li>
+          <a href={tagHref(tag)} style={`font-size:${(0.85 + (items.length / max) * 0.45).toFixed(2)}rem`}>#{tag}</a>
+          <span class="text-xs text-ink-faint">{items.length}</span>
+        </li>
+      ))
+    }
+  </ul>
+</Base>

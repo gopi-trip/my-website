@@ -1,0 +1,90 @@
+---
+import { getEntry, render, getCollection } from 'astro:content';
+import Base from '~/layouts/Base.astro';
+import Prose from '~/components/Prose.astro';
+import Section from '~/components/Section.astro';
+import EntryRow from '~/components/EntryRow.astro';
+import Pixel from '~/components/Pixel.astro';
+import MicroPost from '~/components/MicroPost.astro';
+import { nav, site } from '~/site.config';
+import { getMicro, getNow, getRecent, getWritings, getProjects, getResearch, getWiki } from '~/lib/content';
+import { isoDay } from '~/lib/format';
+
+const home = await getEntry('pages', 'home');
+if (!home) throw new Error('missing src/content/pages/home.md');
+const { Content } = await render(home);
+
+const [recent, micro, now, writings, projects, research, wiki, shelf] = await Promise.all([
+  getRecent(7),
+  getMicro(),
+  getNow(),
+  getWritings(),
+  getProjects(),
+  getResearch(),
+  getWiki(),
+  getCollection('shelf'),
+]);
+
+const counts: Record<string, string> = {
+  '/writings/': `${writings.length}`,
+  '/projects/': `${projects.length}`,
+  '/research/': `${research.length}`,
+  '/wiki/': `${wiki.length}`,
+  '/bookshelf/': `${shelf.length}`,
+  '/micro/': `${micro.length}`,
+};
+const latestNow = now[0];
+---
+
+<Base>
+  <h1 class="sr-only">{site.name}</h1>
+  <div class="mt-10">
+    <Prose><Content /></Prose>
+  </div>
+
+  {
+    latestNow && (
+      <aside class="boxed-pop mt-10 p-4 text-sm" aria-labelledby="now-peek">
+        <p id="now-peek" class="label flex items-center gap-2">
+          <Pixel name="clock" /> right now
+          <span class="text-ink-faint">· {isoDay(latestNow.data.date)}</span>
+        </p>
+        <p class="mt-2 text-ink-soft">{latestNow.data.summary}</p>
+        <a href="/now/" class="mt-2 inline-block text-xs">more of what i'm up to &rarr;</a>
+      </aside>
+    )
+  }
+
+  <Section title="the garden" id="map">
+    <ul class="grid gap-x-8 gap-y-2 sm:grid-cols-2">
+      {
+        nav.map((n) => (
+          <li class="flex items-start gap-3">
+            <Pixel name={n.icon} scale={2} class="mt-1.5 text-ink-soft" />
+            <span class="min-w-0">
+              <a href={n.href}>{n.label}</a>
+              {counts[n.href] && <span class="text-xs text-ink-faint ml-1">({counts[n.href]})</span>}
+              <span class="block text-xs text-ink-soft">{n.blurb}</span>
+            </span>
+          </li>
+        ))
+      }
+    </ul>
+  </Section>
+
+  <Section title="recently tended" id="recent">
+    <ul>
+      {recent.map((r) => <EntryRow href={r.href} title={r.title} date={r.date} aside={`${r.verb} · ${r.where}`} />)}
+    </ul>
+  </Section>
+
+  {
+    micro.length > 0 && (
+      <Section title="lately, briefly" id="micro" more={{ href: '/micro/', label: 'all thoughts' }}>
+        <ol class="space-y-5">
+          {micro.slice(0, 3).map((m) => <MicroPost entry={m} />)}
+        </ol>
+      </Section>
+    )
+  }
+</Base>

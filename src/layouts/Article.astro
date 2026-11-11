@@ -1,0 +1,80 @@
+---
+/**
+ * Shared layout for anything long-form: writings, projects, research, wiki.
+ * Pages pass the rendered <Content/> as the default slot and fill `meta`
+ * (under the title) and `after` (below the body: backlinks, links, etc).
+ */
+import Base from './Base.astro';
+import Prose from '~/components/Prose.astro';
+import Tags from '~/components/Tags.astro';
+import type { MarkdownHeading } from 'astro';
+
+interface Props {
+  title: string;
+  description?: string;
+  published?: Date;
+  tags?: string[];
+  headings?: MarkdownHeading[];
+  back: { href: string; label: string };
+  prev?: { href: string; title: string };
+  next?: { href: string; title: string };
+}
+const { title, description, published, tags = [], headings = [], back, prev, next } = Astro.props;
+const toc = headings.filter((h) => h.depth === 2 || h.depth === 3);
+---
+
+<Base title={title} description={description} type="article" published={published}>
+  <article class="mt-10">
+    <p class="text-xs text-ink-soft mb-4 no-print"><a href={back.href} class="no-underline hover:underline">&larr; {back.label}</a></p>
+    <header>
+      <h1 class="text-2xl sm:text-[1.7rem] font-bold leading-tight">{title}</h1>
+      {description && <p class="mt-2 text-ink-soft">{description}</p>}
+      <div class="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-ink-soft">
+        <slot name="meta" />
+      </div>
+      <Tags tags={tags} class="mt-3" />
+    </header>
+
+    {
+      toc.length >= 3 && (
+        <details class="boxed mt-8 text-sm no-print">
+          <summary class="cursor-pointer label">contents</summary>
+          <ol class="mt-2 space-y-0.5">
+            {toc.map((h) => (
+              <li class:list={[h.depth === 3 && 'pl-4']}>
+                <a href={`#${h.slug}`} class="no-underline hover:underline text-ink-soft">{h.text}</a>
+              </li>
+            ))}
+          </ol>
+        </details>
+      )
+    }
+
+    <div class="dither-thick my-8 w-16" aria-hidden="true"></div>
+
+    <Prose>
+      <slot />
+    </Prose>
+
+    <slot name="after" />
+
+    {
+      (prev || next) && (
+        <nav aria-label="more" class="mt-14 grid gap-3 sm:grid-cols-2 text-sm no-print">
+          {prev ? (
+            <a href={prev.href} class="boxed no-underline hover:border-accent">
+              <span class="block text-xs text-ink-faint">&larr; older</span>
+              {prev.title}
+            </a>
+          ) : <span />}
+          {next && (
+            <a href={next.href} class="boxed no-underline hover:border-accent sm:text-right">
+              <span class="block text-xs text-ink-faint">newer &rarr;</span>
+              {next.title}
+            </a>
+          )}
+        </nav>
+      )
+    }
+  </article>
+</Base>

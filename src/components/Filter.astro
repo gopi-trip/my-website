@@ -1,0 +1,49 @@
+---
+/**
+ * Progressive-enhancement filter. Wrap a list in <div data-filter-scope>,
+ * mark items with data-filter-item="value" (space-separated for many),
+ * optionally wrap item groups in data-filter-group so empty groups hide.
+ * Without JS the buttons stay hidden and everything is shown.
+ */
+interface Props { options: { value: string; label: string; count?: number }[]; label?: string }
+const { options, label = 'filter' } = Astro.props;
+---
+
+<div class="filter-bar hidden flex-wrap items-center gap-1.5 text-xs mb-6 no-print" role="group" aria-label={label}>
+  <span class="label mr-1">{label}:</span>
+  <button type="button" class="chip cursor-pointer" data-filter="*" aria-pressed="true">all</button>
+  {
+    options.map((o) => (
+      <button type="button" class="chip cursor-pointer" data-filter={o.value} aria-pressed="false">
+        {o.label}{o.count !== undefined && <span class="text-ink-faint"> {o.count}</span>}
+      </button>
+    ))
+  }
+</div>
+
+<style>
+  button[aria-pressed='true'] {
+    background: var(--ink);
+    color: var(--paper);
+    border-color: var(--ink);
+  }
+</style>
+
+<script>
+  for (const bar of document.querySelectorAll<HTMLElement>('.filter-bar')) {
+    const scope = bar.closest('[data-filter-scope]') ?? document;
+    bar.classList.replace('hidden', 'flex');
+    bar.addEventListener('click', (ev) => {
+      const btn = (ev.target as HTMLElement).closest<HTMLButtonElement>('button[data-filter]');
+      if (!btn) return;
+      const want = btn.dataset.filter!;
+      bar.querySelectorAll('button').forEach((b) => b.setAttribute('aria-pressed', String(b === btn)));
+      scope.querySelectorAll<HTMLElement>('[data-filter-item]').forEach((el) => {
+        el.hidden = want !== '*' && !el.dataset.filterItem!.split(' ').includes(want);
+      });
+      scope.querySelectorAll<HTMLElement>('[data-filter-group]').forEach((g) => {
+        g.hidden = !g.querySelector('[data-filter-item]:not([hidden])');
+      });
+    });
+  }
+</script>

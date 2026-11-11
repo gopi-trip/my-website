@@ -1,0 +1,17 @@
+---
+import { getEntry, render } from 'astro:content';
+import Base from '~/layouts/Base.astro';
+import PageTitle from '~/components/PageTitle.astro';
+import Prose from '~/components/Prose.astro';
+import { isoDay } from '~/lib/format';
+
+const about = await getEntry('pages', 'about');
+if (!about) throw new Error('missing src/content/pages/about.md');
+const { Content } = await render(about);
+---
+
+<Base title={about.data.title} description={about.data.description}>
+  <PageTitle title={about.data.title} icon="person" />
+  <Prose><Content /></Prose>
+  {about.data.updated && <p class="mt-10 text-xs text-ink-faint">this page last revised {isoDay(about.data.updated)}</p>}
+</Base>

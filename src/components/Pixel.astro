@@ -1,0 +1,28 @@
+---
+import { iconRuns, type IconName } from '~/lib/icons';
+
+interface Props {
+  name: IconName;
+  /** rendered size in px of one *pixel* of the icon */
+  scale?: number;
+  class?: string;
+  /** give a label only if the icon carries meaning on its own */
+  label?: string;
+}
+const { name, scale = 2, class: cls = '', label } = Astro.props;
+const { w, h, runs } = iconRuns(name);
+---
+
+<svg
+  class:list={['inline-block shrink-0 align-[-0.15em]', cls]}
+  width={w * scale}
+  height={h * scale}
+  viewBox={`0 0 ${w} ${h}`}
+  shape-rendering="crispEdges"
+  role={label ? 'img' : undefined}
+  aria-label={label}
+  aria-hidden={label ? undefined : 'true'}
+  focusable="false"
+>
+  {runs.map((r) => <rect x={r.x} y={r.y} width={r.w} height="1" fill={r.tone === 'ink' ? 'currentColor' : 'var(--straw)'} />)}
+</svg>

@@ -1,0 +1,15 @@
+---
+import Pixel from './Pixel.astro';
+interface Props { stage: 'seedling' | 'budding' | 'evergreen'; short?: boolean }
+const { stage, short = false } = Astro.props;
+const blurb = {
+  seedling: 'rough, just planted',
+  budding: 'taking shape',
+  evergreen: 'reasonably complete',
+}[stage];
+---
+
+<span class="inline-flex items-center gap-1 text-xs text-ink-soft whitespace-nowrap" title={`${stage}: ${blurb}`}>
+  <Pixel name={stage} scale={2} />
+  <span class:list={[short && 'sr-only']}>{stage}</span>
+</span>

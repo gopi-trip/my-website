@@ -1,0 +1,27 @@
+---
+import { render, type CollectionEntry } from 'astro:content';
+import { clock, isoDay } from '~/lib/format';
+import Tags from './Tags.astro';
+
+interface Props { entry: CollectionEntry<'micro'>; permalink?: boolean }
+const { entry, permalink = true } = Astro.props;
+const { Content } = await render(entry);
+const d = entry.data.date;
+---
+
+<li class="group relative pl-5 list-none" id={entry.id}>
+  <span aria-hidden="true" class="absolute left-0 top-[0.6em] h-[6px] w-[6px] bg-ink-faint group-hover:bg-accent"></span>
+  <div class="prose text-[0.95rem]"><Content /></div>
+  <div class="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-ink-faint">
+    {
+      permalink ? (
+        <a href={`/micro/${entry.id}/`} class="no-underline hover:underline tabular-nums">
+          <time datetime={d.toISOString()}>{isoDay(d)} {clock(d)}</time>
+        </a>
+      ) : (
+        <time datetime={d.toISOString()} class="tabular-nums">{isoDay(d)} {clock(d)}</time>
+      )
+    }
+    <Tags tags={entry.data.tags} />
+  </div>
+</li>
