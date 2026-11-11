@@ -5,12 +5,12 @@
 import type { IconName } from '~/lib/icons';
 
 export const site = {
-  name: 'gop-trip',
+  name: 'gopi-trip',
   /** shown under the name in the header */
   tagline: 'a small corner of the internet, tended by hand',
   description:
     'Personal site of gop-trip: writings, projects, research notes, a wiki, a bookshelf and a microblog.',
-  author: 'gop-trip',
+  author: 'gopi-trip',
   /** started tending this garden in... (shown in the footer) */
   since: 2026,
   lang: 'en',
