@@ -1,6 +1,7 @@
 ---
 import '~/styles/global.css';
 import { site } from '~/site.config';
+import { spriteData } from '~/lib/icons';
 
 export interface SeoProps {
   title?: string;
@@ -13,6 +14,7 @@ export interface SeoProps {
 const { title, description = site.description, type = 'website', published, noindex = false } = Astro.props as SeoProps;
 const fullTitle = title ? `${title} · ${site.name}` : `${site.name} · ${site.tagline}`;
 const canonical = new URL(Astro.url.pathname, Astro.site);
+const favicon = spriteData('cat');
 ---
 
 <meta charset="utf-8" />
@@ -36,6 +38,23 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
 <meta property="og:url" content={canonical} />
 <meta name="twitter:card" content="summary" />
 {published && <meta property="article:published_time" content={published.toISOString()} />}
+
+<!-- animate the favicon cat: most browsers freeze animated SVG favicons on frame one -->
+<script is:inline define:vars={{ seq: favicon.sequence, slot: favicon.slot }}>
+  (function () {
+    if (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    var link = document.querySelector('link[rel="icon"]');
+    if (!link) return;
+    var cur = -1;
+    function tick() {
+      // clock-based, so it stays in step even when background tabs throttle timers
+      var f = seq[Math.floor(Date.now() / slot) % seq.length];
+      if (f !== cur) { cur = f; link.href = '/favicon/' + f + '.svg'; }
+    }
+    tick();
+    setInterval(tick, slot);
+  })();
+</script>
 
 <!-- set the theme before first paint so there's no flash -->
 <script is:inline>

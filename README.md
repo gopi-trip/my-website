@@ -137,7 +137,7 @@ src/
 ├── lib/
 │   ├── content.ts        querying: sorting, drafts, backlinks, tags, recent activity
 │   ├── format.ts         dates, reading time
-│   ├── icons.ts          pixel icon grids
+│   ├── icons.ts          pixel icon grids + animated sprites
 │   └── wikilinks.mjs     the [[wikilink]] Markdown plugin
 ├── pages/                routes (one folder per section, plus rss, robots, favicon, 404)
 └── styles/global.css     design tokens, base styles, prose, light/dark palettes
@@ -153,11 +153,13 @@ scripts/new.mjs           content scaffolding
   labels. Both are self-hosted through Fontsource, so no requests go to Google.
 - **Icons** are character grids in `src/lib/icons.ts` (`#` ink, `+` highlighter,
   `.` empty), rendered to crisp SVG by `<Pixel name="…" scale={2} />`. To add
-  one, draw a new grid. The favicon (`/favicon.svg`) is generated from the
-  `resident` grid.
+  one, draw a new grid. Animated sprites (frames + a play sequence) live in
+  the same file and render with `<Sprite name="cat" />`. The favicon
+  (`/favicon.svg`) is the `cat` sprite; since most browsers freeze animated SVG
+  favicons, a small script in `BaseHead.astro` flips through `/favicon/<n>.svg`.
 - **Separators** are 2px dotted pixel rows (`.dither`) and dotted "leaders"
   between titles and dates.
-- **JavaScript** is limited to the theme toggle, the list filters (writings,
+- **JavaScript** is limited to the theme toggle, the favicon cat, the list filters (writings,
   projects, bookshelf) and the wiki search. All of it is progressive
   enhancement: without JS everything is still listed.
 
