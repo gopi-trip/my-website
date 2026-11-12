@@ -4,8 +4,7 @@ title: home
 
 <!-- This is the intro on the front page. Make it sound like you. -->
 
-hi, i'm **gop-trip**. i write software, poke at machine learning models until
-they explain themselves, and keep notes on everything i'd otherwise forget.
+hi, i'm **gop-trip**. Call me Gopi. I .... exist, keep notes on everything i'd otherwise forget and I forget most things.
 
 this is my corner of the internet. it isn't a portfolio so much as a
 workshop with the door left open: half-finished [[how-this-wiki-works|notes]],
