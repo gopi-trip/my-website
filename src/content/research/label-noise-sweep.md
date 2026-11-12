@@ -6,7 +6,7 @@ kind: experiment
 status: published
 tags: [ml, experiments]
 links:
-  code: https://github.com/gop-trip
+  code: https://github.com/gopi-trip
 ---
 
 <!-- Sample experiment write-up. Replace with your own. -->

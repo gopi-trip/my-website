@@ -20,5 +20,9 @@ I'm still figuring out who I am and what this is....
 
 ## say hello
 
-The easiest way is [GitHub](https://github.com/gop-trip). I read everything,
+The easiest way is [GitHub](https://github.com/gopi-trip) or email at
+[gopitrip.gt123@gmail.com](mailto:gopitrip.gt123@gmail.com). I read everything,
 eventually.
+
+To follow along, subscribe to the [RSS feed](/rss.xml). It has every writing
+and micro post in one place.

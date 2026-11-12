@@ -33,6 +33,6 @@ export const nav: NavItem[] = [
 
 /** Elsewhere on the internet. Remove what you don't use; `href` can be mailto:. */
 export const elsewhere: { label: string; href: string }[] = [
-  { label: 'github', href: 'https://github.com/gop-trip' },
+  { label: 'github', href: 'https://github.com/gopi-trip' },
   { label: 'rss', href: '/rss.xml' },
 ];

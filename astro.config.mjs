@@ -8,7 +8,7 @@ import { wikiLinks } from './src/lib/wikilinks.mjs';
 
 // The canonical URL of the deployed site. Used for RSS, sitemap and
 // <link rel="canonical">. Override at build time with SITE_URL=...
-const site = process.env.SITE_URL ?? 'https://example.com';
+const site = process.env.SITE_URL ?? 'https://my-website-gilt-one-47.vercel.app';
 
 export default defineConfig({
   site,

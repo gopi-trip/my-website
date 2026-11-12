@@ -7,7 +7,7 @@ featured: true
 stack: [astro, typescript, tailwind, markdown]
 tags: [web, meta]
 links:
-  repo: https://github.com/gop-trip/my-website
+  repo: https://github.com/gopi-trip/my-website
 ---
 
 A personal site built to be lived in rather than shown off. Content lives in
