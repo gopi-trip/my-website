@@ -26,8 +26,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
 <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
 <link rel="alternate" type="application/rss+xml" title={`${site.name} — everything`} href="/rss.xml" />
 <link rel="sitemap" href="/sitemap-index.xml" />
-<meta name="theme-color" content="#f3eee2" media="(prefers-color-scheme: light)" />
-<meta name="theme-color" content="#191815" media="(prefers-color-scheme: dark)" />
+<meta name="theme-color" content="#f3eee2" />
 <meta name="generator" content={Astro.generator} />
 
 <meta property="og:type" content={type} />
@@ -43,7 +42,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
   (function () {
     var t = null;
     try { t = localStorage.getItem('theme'); } catch (e) {}
-    if (t !== 'light' && t !== 'dark') t = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    if (t !== 'light' && t !== 'dark') t = 'light';
     document.documentElement.dataset.theme = t;
   })();
 </script>

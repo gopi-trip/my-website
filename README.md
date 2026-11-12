@@ -148,7 +148,7 @@ scripts/new.mjs           content scaffolding
 
 - **Palette:** cream paper (`#f3eee2`) and warm ink by day, "night shift" by
   night, one brick accent and a straw highlighter. The tokens are at the top of
-  `global.css`. The theme follows the OS setting until a visitor uses the toggle.
+  `global.css`. The theme starts on day until a visitor uses the toggle.
 - **Type:** JetBrains Mono for reading, Silkscreen for pixel headings and
   labels. Both are self-hosted through Fontsource, so no requests go to Google.
 - **Icons** are character grids in `src/lib/icons.ts` (`#` ink, `+` highlighter,
