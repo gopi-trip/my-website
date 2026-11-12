@@ -9,7 +9,7 @@ export const site = {
   /** shown under the name in the header */
   tagline: 'a small corner of the internet, tended by hand',
   description:
-    'Personal site of gop-trip: writings, projects, research notes, a wiki, a bookshelf and a microblog.',
+    'Personal site of gopi-trip: writings, projects, research notes, a wiki, a bookshelf and a microblog.',
   author: 'gopi-trip',
   /** started tending this garden in... (shown in the footer) */
   since: 2026,
