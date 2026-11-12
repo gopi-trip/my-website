@@ -2,14 +2,14 @@
 # status: reading | read | queued | abandoned
 
 - id: 12-rules-for-life
-  title: 12 Rules for Life: An Antidote to Chaos
+  title: "12 Rules for Life: An Antidote to Chaos"
   author: Jordan B. Peterson
   year: 2018
   status: queued
   tags: [psychology, philosophy, self-development]
 
 - id: how-linux-works
-  title: How Linux Works: What Every Superuser Should Know
+  title: "How Linux Works: What Every Superuser Should Know"
   author: Brian Ward
   year: 2021
   status: queued
@@ -37,7 +37,7 @@
   tags: [quantum-computing, computer-science, mathematics]
 
 - id: system-design-interview
-  title: System Design Interview: An Insider's Guide
+  title: "System Design Interview: An Insider's Guide"
   author: Alex Xu
   year: 2020
   status: queued
